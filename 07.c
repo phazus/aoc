@@ -36,17 +36,23 @@ void free_crabs(struct Crab *head) {
   }
 }
 
-void solve(struct Crab *head, int median, int mean) {
-  int ans1 = 0, ans2 = 0;
+void solve(struct Crab *head, int median, float mean) {
+  int mean_f = floor(mean), mean_c = ceil(mean);
+  int ans1 = 0, ans2_1 = 0, ans2_2 = 0;
   while (head != NULL) {
     ans1 += (abs(head->pos - median));
-    int d = abs(head->pos - mean);
-    ans2 += (d * (d + 1)) / 2;
+    
+    int d = abs(head->pos - mean_f);
+    ans2_1 += (d * (d + 1)) / 2;
+
+    d = abs(head->pos - mean_c);
+    ans2_2 += (d * (d + 1)) / 2;
+
     head = head->next;
   }
 
   printf("1: %d\n", ans1);
-  printf("2: %d\n", ans2);
+  printf("2: %d\n", (int)fmin(ans2_1, ans2_2));
 }
 
 int main() {
@@ -63,22 +69,14 @@ int main() {
   }
   fclose(f);
 
-  float mean_f = (float)sum / (int)crabs_s;
-  printf("Mean value: %f\n", mean_f);
-
+  float mean = (float)sum / (int)crabs_s;
   int median;
   struct Crab *c = head;
   for (size_t i = 0; i < crabs_s / 2; i++)
     c = c->next;
   median = c->pos;
-
-  int mean = floor(mean_f);
-  printf("With mean = %d\n", mean);
+  printf("Median value: %d\n", median);
+  
   solve(head, median, mean);
-
-  mean = ceil(mean_f);
-  printf("With mean = %d\n", mean);
-  solve(head, median, mean);
-
   free_crabs(head);
 }
