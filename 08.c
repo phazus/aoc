@@ -31,15 +31,15 @@
 // that can be initially defined, i.e. by their amount of used segments.
 // -> 1 4 7 8
 //
-// As will be seen in the next figure, even two numbers suffice
+// As will be seen in the next figure, the digit 4 suffices
 // to get a distinction in {a,c} and {d,g}:
 // 
-//                                   | a : 1 occurences ┐
+//                                   | a : 0 occurences ┐
 //                                   | b : 1 occurences | -> differ
-// 4 : [  b c d   f  ] = 4 segments  | c : 2 occurences ┘
-// 7 : [a   c     f  ] = 3 segments  | d : 1 occurences ┐
+//                                   | c : 1 occurences ┘
+// 4 : [  b c d   f  ] = 4 segments  | d : 1 occurences ┐
 //                                   | e : 0 occurences | -> differ
-//                                   | f : 2 occurences |
+//                                   | f : 1 occurences |
 //                                   | g : 0 occurences ┘
 //
 
@@ -47,12 +47,12 @@
 // where the index in each dimension represents the amount of occurences 
 // of a segment for all digits and for {4, 7}, respectively.
 
-#define INDEX_SEG_A [8][1]
+#define INDEX_SEG_A [8][0]
 #define INDEX_SEG_B [6][1]
-#define INDEX_SEG_C [8][2]
+#define INDEX_SEG_C [8][1]
 #define INDEX_SEG_D [7][1]
 #define INDEX_SEG_E [4][0]
-#define INDEX_SEG_F [9][2]
+#define INDEX_SEG_F [9][1]
 #define INDEX_SEG_G [7][0]
 
 #define PATTERN_MAX_LENGTH 8    // incl. \0
@@ -60,7 +60,7 @@
 #define N_OUTPUT_VALUES 4
 
 int main() {
-    char lookup[10][3] = {{0}}; // Big enough to contain all segments
+    char lookup[10][2] = {{0}}; // Big enough to contain all segments
     char signal_patterns[N_DIGITS][PATTERN_MAX_LENGTH];
     char output_values[N_OUTPUT_VALUES][PATTERN_MAX_LENGTH];
 
@@ -93,9 +93,9 @@ int main() {
                 // Count occurences in each digit
                 cnt1 += (strchr(digit, segment) != NULL);
 
-                // Count occurence in digit 4 or 7.
+                // Count occurences in digit 4.
                 int l = strlen(digit);
-                cnt2 += (l == 4 || l == 3) && strchr(digit, segment);
+                cnt2 += l == 4 && strchr(digit, segment);
             }
 
             lookup[cnt1][cnt2] = segment;
